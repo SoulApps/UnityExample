@@ -9,11 +9,14 @@ public class Move : MonoBehaviour
     public float jumpValue = 0.1f;
     public float prueba;
     private AudioSource audiosource;
+    private GameObject capsules;
+    public GameObject prefab;
     // Use this for initialization
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         audiosource = GetComponent<AudioSource>();
+        capsules = GameObject.Find("Capsules");
     }
 
     // Update is called once per frame
@@ -39,5 +42,29 @@ public class Move : MonoBehaviour
             print("Colisión con cubo");
             Destroy(collision.gameObject);
         }
+        else if (collision.gameObject.tag.Equals("Capsule"))
+        {
+            collision.gameObject.GetComponent<MeshRenderer>().material.color *= 1.2f;
+            collision.gameObject.GetComponent<AudioSource>().Play();
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Capsule"))
+        {
+            collision.gameObject.GetComponent<MeshRenderer>().material.color /= 1.2f;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        foreach (Transform child in capsules.GetComponentInChildren<Transform>())
+        {
+            if (child.gameObject.tag.Equals("Capsule"))
+            {
+                child.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                child.gameObject.GetComponent<CapsuleCollider>().enabled = true;
+            }
+        }
+        Instantiate(prefab, new Vector3(Random.Range(-10.0f, 10.0f), 0.5f, Random.Range(-10.0f, 10.0f)), Quaternion.identity);
     }
 }
