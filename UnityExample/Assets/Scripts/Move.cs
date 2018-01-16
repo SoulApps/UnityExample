@@ -11,6 +11,7 @@ public class Move : MonoBehaviour
     private AudioSource audiosource;
     private GameObject capsules;
     public GameObject prefab;
+    private Color capsuleColor;
     // Use this for initialization
     void Start()
     {
@@ -45,6 +46,8 @@ public class Move : MonoBehaviour
         else if (collision.gameObject.tag.Equals("Capsule"))
         {
             collision.gameObject.GetComponent<MeshRenderer>().material.color *= 1.2f;
+            capsuleColor = collision.gameObject.GetComponent<MeshRenderer>().material.GetColor("_Color");
+            collision.gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color",Color.red);
             collision.gameObject.GetComponent<AudioSource>().Play();
         }
     }
@@ -53,6 +56,7 @@ public class Move : MonoBehaviour
         if (collision.gameObject.tag.Equals("Capsule"))
         {
             collision.gameObject.GetComponent<MeshRenderer>().material.color /= 1.2f;
+            collision.gameObject.GetComponent<MeshRenderer>().material.SetColor("_Color",capsuleColor);
         }
     }
     private void OnTriggerEnter(Collider other)
